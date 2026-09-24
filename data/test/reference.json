@@ -1,0 +1,26 @@
+{
+  "description": "Số box tham chiếu của từng ảnh kiểm thử; check_submission.py dùng file này để phát hiện nhãn kiểm thử bị sửa.",
+  "boxes_per_image": {
+    "frame_0044.jpg": 22,
+    "frame_0047.jpg": 23,
+    "frame_0050.jpg": 19,
+    "frame_0053.jpg": 18,
+    "frame_0056.jpg": 19,
+    "frame_0144.jpg": 21,
+    "frame_0147.jpg": 23,
+    "frame_0150.jpg": 20,
+    "frame_0153.jpg": 22,
+    "frame_0156.jpg": 20,
+    "frame_0244.jpg": 23,
+    "frame_0247.jpg": 21,
+    "frame_0250.jpg": 17,
+    "frame_0253.jpg": 16,
+    "frame_0256.jpg": 18,
+    "frame_0344.jpg": 22,
+    "frame_0347.jpg": 23,
+    "frame_0350.jpg": 23,
+    "frame_0353.jpg": 23,
+    "frame_0356.jpg": 24
+  },
+  "total_boxes": 417
+}

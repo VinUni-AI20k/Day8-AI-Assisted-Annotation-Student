@@ -1,0 +1,3 @@
+# Các script trong tools/ chạy trên máy bạn chỉ dùng thư viện chuẩn Python 3.9+.
+# Notebook cài ultralytics==8.4.161 trên Colab để tránh thay đổi phiên bản giữa lớp.
+# Công cụ gán nhãn (CVAT, AnyLabeling, ...) dùng riêng.

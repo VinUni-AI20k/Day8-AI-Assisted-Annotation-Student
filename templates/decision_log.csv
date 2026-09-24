@@ -1,5 +1,0 @@
-frame_id,object,state,rule_or_reason,found_before_ai_toggle,signed_by
-d01,xe trắng cắt mép trái (x≈0–60),edited,"Card mục Schema: van là xe thùng kín mui cao, không có nắp capô dài; model gán others vì COCO không có van → đổi sang van",yes,Mẫu Lab Coach
-d01,xe đen dưới đáy ảnh (x≈666–818),added,Card mục Vẽ box: xe cắt mép dưới vẫn phải vẽ khi thấy khoảng một nửa thân trở lên, box ôm phần nhìn thấy; AI không có box,yes,Mẫu Lab Coach
-d01,box others đè lên xe buýt trắng,deleted,Box thứ hai trên cùng một vật đã có box bus đúng → trùng,no,Mẫu Lab Coach
-d01,box car trong vùng xám bên trái,escalated,Vật nằm trong vùng ignore (xám) — card nói không vẽ; hỏi Lab Coach vì phần đầu xe lộ ra ngoài vùng xám,no,Mẫu Lab Coach

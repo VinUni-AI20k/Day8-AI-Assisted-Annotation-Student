@@ -1,0 +1,2 @@
+round,frame_id,object,action,rule_or_reason
+1,frame_0000.jpg,xe tối gần mép trái,added,Thấy thân xe và đủ ranh giới theo GUIDELINE_LABEL.md

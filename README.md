@@ -1,131 +1,50 @@
-# Day 8 — Thẩm định pre-label và xếp hạng active learning
+# Day 8 — kiểm nhãn AI và một vòng học chủ động
 
-**Dành cho học viên · 240 phút trên lớp · bài nộp cá nhân, có thể trao đổi theo cặp.** Repo mẫu này được công bố **public khi bắt đầu buổi lab**.
-Tạo repo bài làm **public** của riêng bạn từ repo mẫu, push kết quả sau khi hoàn thành hai mốc khóa rồi nộp link theo cách Lab Coach thông báo.
+**Bản ghép thử nội bộ · 240 phút · bài nộp cá nhân, được trao đổi theo cặp.** Repo này là một luồng học viên duy nhất. Khi repo mẫu được công bố trong buổi học, mỗi học viên chọn **Use this template → Create a new repository**, để repo bài làm của mình **public** để hệ thống chấm đọc được.
 
-Pre-label đổi việc gán nhãn từ **vẽ nhãn** sang **thẩm định nhãn máy vẽ**. Hôm nay bạn làm cả hai trên cùng kiểu cảnh
-giao thông, rồi đo xem cách làm của mình thay đổi ra sao. Sau đó bạn chọn frame nên gửi đi gán nhãn tiếp khi ngân sách
-có hạn.
+## Bạn sẽ làm gì?
 
-Bạn sẽ:
+Trên video đường cao tốc ban đêm, mô hình YOLO đã huấn luyện sẵn bỏ sót một số xe. Bạn chạy mô hình trên Google Colab, xem vì sao nó chọn một lô ảnh từ pool chưa gán nhãn, **tự quan sát một ảnh trước khi xem nhãn AI**, sửa nhãn gợi ý, rồi dùng nhãn đã sửa để fine-tune. Cuối cùng bạn đánh giá trên cùng tập kiểm thử, so với lúc đầu và quyết định vòng sau nên làm gì.
 
-1. **Chạy AI thật** trên frame demo `d01` bằng Colab, đổi ngưỡng và so dự đoán.
-2. **Làm tay** 6 frame: vẽ box mọi xe theo card guideline.
-3. **Thẩm định pre-label** 10 frame do một model thật gợi ý: giữ, sửa, xóa hoặc vẽ thêm từng box. Batch này có một frame
-   honeypot đã cài lỗi.
-4. **Khóa bài**, rồi mới xem reference và đọc lỗi của AI và của chính mình theo class, điều kiện, kích thước.
-5. **Sửa lại** lỗi của mình, ghi nguyên nhân từng lỗi.
-6. **Xếp hạng 50 frame** chưa gán nhãn theo thứ tự nên gửi đi gán nhãn, trong một ngân sách cố định.
-7. **Phản biện gợi ý của model** và chọn ba frame cho lượt tiếp theo từ kết quả đã xem; đây là kế hoạch, chưa huấn luyện lại model.
+Một vòng bắt buộc: **cold start → chọn 12 ảnh → kiểm/sửa pre-label → fine-tune → đánh giá → quyết định tiếp**. Làm thêm vòng chỉ là lựa chọn khi còn thời gian; số vòng và mức tăng AP50 không tự mang thêm điểm.
 
-`make frame-scores` điền sẵn **bản nháp** 50 rank theo một cách chọn của model khi bảng còn trống; bạn dùng ảnh và
-metadata để sửa. Bạn không phải gõ 50 số thứ tự từ đầu.
+| Nơi làm | Công việc |
+| --- | --- |
+| **Colab** | Chạy YOLO, chọn ảnh, fine-tune và tạo số đo. Máy cá nhân không cần GPU. |
+| **CVAT** | Máy thường dùng CVAT local; máy yếu dùng CVAT chương trình qua trình duyệt. Cả hai sửa cùng định dạng box `car` và xuất Ultralytics YOLO Detection 1.0. AnyLabeling hoặc sửa file YOLO là đường khác nếu cần. |
+| **Máy cá nhân** | Chạy các script Python chỉ dùng thư viện chuẩn để kiểm và đóng gói nhãn; tải kết quả Colab về, commit rồi push repo public của mình. Không huấn luyện mô hình ở đây. |
 
-Bạn có thể làm toàn bộ bài **một mình**. Nếu làm cùng bạn, mỗi người vẫn tự gán nhãn, tự xếp hạng và nộp repo riêng; chỉ trao đổi sau khi cả hai đã chốt quyết định độc lập. Hai cách có cùng rubric.
+Mọi người dùng cùng [quy tắc gán nhãn](GUIDELINE_LABEL.md), [hướng dẫn từng bước](GUIDE.md), [rubric 100 điểm](RUBRIC.md) và gói nộp. Làm cùng bạn được trao đổi sau khi mỗi người đã khóa bản quan sát độc lập; mỗi người vẫn tự sửa nhãn, phân tích và nộp repo riêng.
 
-Bài **không** chấm theo độ lớn của các con số bạn đo được. Bài xét bằng chứng và lập luận: bạn làm gì, vì sao, và con số
-nào không chứng minh điều gì. Làm đúng như bình thường bạn vẫn làm; con số thật có ích hơn con số đẹp.
+## Dữ liệu và giới hạn
 
-## Nhớ 3 nơi làm việc
+- `data/pool/images/`: 268 ảnh chưa gán nhãn để chọn lô.
+- `data/test/`: 20 ảnh và **nhãn tham chiếu do mô hình tạo**, dùng để minh họa phép so sánh. Chúng chưa được người rà từng box, vì vậy AP50 đo mức khớp với bộ tham chiếu này; nó không chứng minh chất lượng thực địa.
+- Pool và test được tách theo thời gian với vùng đệm; xem [DATA.md](data/DATA.md). Không sửa nhãn test hoặc đưa ảnh test vào huấn luyện.
+- Nguồn và quyền phân phối ảnh phải được người phụ trách dữ liệu xác nhận trước khi repo học viên được công bố public.
 
-| Nơi | Bạn làm gì? |
-|---|---|
-| **Colab** | Chạy thử YOLO trên `d01`, chạy lệnh `lab8`, tạo và tải `submission.zip` |
-| **CVAT** | Vẽ tay trước, rồi duyệt box AI; máy bình thường dùng CVAT local, máy yếu dùng CVAT chương trình |
-| **Repo public của bạn** | Nhận thư mục `submission/` từ Colab, commit và push sau hai mốc khóa để hệ thống chấm |
+## Lộ trình 240 phút
 
-Thứ tự quan trọng: **tay → có AI → khóa → xem reference → sửa → xếp hạng → tự/bạn kiểm → khóa → xem kết quả → đề xuất lượt sau → push**. Mỗi mốc có lệnh và dấu hiệu hoàn thành trong [GUIDE](GUIDE.md).
+| Phút | Việc | Bằng chứng |
+| ---: | --- | --- |
+| 0–25 | Tạo repo từ template, clone, đóng gói dữ liệu, mở Colab và chạy cold start | `outputs/metrics_round0.json`, `outputs/selection_round1.csv` |
+| 25–40 | Xem một ảnh đã chọn khi chưa mở box AI; ghi và khóa quan sát | `reports/BLIND_SCAN.md`, `reports/blind_lock.json` |
+| 40–110 | Sửa pre-label của 12 ảnh trên CVAT; ghi ít nhất 3 quyết định cụ thể | `reports/REVIEW_LOG.csv`, nhãn đã sửa |
+| 110–120 | Nghỉ | |
+| 120–145 | Export, đóng gói, kiểm định dạng và tải ZIP lên Colab | `labels/round1/`, `outputs/round1_diff.json` |
+| 145–175 | Fine-tune, đo lại trên test, xem ảnh so sánh | `outputs/metrics_round1.json`, `outputs/compare_round1.jpg` |
+| 175–205 | Giải thích chọn mẫu, kết quả và giới hạn; quyết định làm tiếp/dừng | `reports/SELECTION.md`, `reports/REPORT.md` |
+| 205–225 | Kiểm gói nộp và push lên repo public của mình | `reports/rounds_table.md`, toàn bộ gói nộp |
+| 225–240 | Dự phòng sự cố hoặc phân tích sâu hơn | Không bắt buộc vòng 2 |
 
-## Bắt đầu
+Các mốc chỉ là kế hoạch cho bản ghép thử, cần được kiểm bằng thời gian thực của người mới và CVAT chương trình. Nếu Colab chưa cấp GPU hoặc CVAT không mở được, báo Lab Coach để dùng đường dự phòng; không sửa số đo hoặc bỏ qua nhãn để chạy kịp.
 
-Cần: trình duyệt, tài khoản Google để mở [notebook Colab](notebooks/day8-colab.ipynb), tài khoản GitHub và CVAT. Không cần GPU trên máy cá nhân. Máy bình thường dùng CVAT local; máy yếu dùng CVAT của chương trình qua trình duyệt. Cả hai chạy AI và lệnh phân tích trên Colab.
+## Gói nộp duy nhất
 
-1. Trên trang repo này bấm **Use this template → Create a new repository**, chủ sở hữu là tài khoản của bạn, chọn
-   **Public**. Không cần thêm Lab Coach làm collaborator để xem bài. Tải repo của bạn bằng **Code → Download ZIP**.
-   Nếu link repo mẫu báo 404 **trong buổi lab**, kiểm tra lại link chính thức và báo Lab Coach; bạn không cần được mời
-   riêng để đọc repo mẫu sau khi nó đã public.
-2. Giải nén ZIP để lấy [notebook](notebooks/day8-colab.ipynb), vào Colab chọn **File → Upload notebook** và chọn file `notebooks/day8-colab.ipynb`. Sau đó tải **ZIP repo riêng** lên ở ô đầu, điền tên và **GitHub username**. Lệnh `init` tự cho bạn lộ trình A/B và chi phí S1/S2 ổn định theo username; Lab Coach không phát nhóm/kịch bản. Chạy thử AI trên frame demo theo ô tiếp theo.
-3. Mở [GUIDE.md](GUIDE.md) và [card CVAT](cards/cvat-card.md), làm theo từng khối. Máy bình thường có thể dùng terminal trong repo: `make verify-data`, `make init NAME="Họ Tên" GITHUB_USER=tai-khoan`. Windows không có `make`: `python -m lab8 init --name "Họ Tên" --github-user tai-khoan`.
-4. Cuối buổi, **sau cả hai mốc khóa**, tải `submission.zip` từ Colab. Dùng GitHub Desktop **Clone repository** để có bản repo trên máy, giải nén `submission/` vào bản clone đó, kiểm tra file rồi **Commit to main → Push origin**. Có thể dùng Git CLI tương đương. Thư mục **Download ZIP** không phải bản clone và không push trực tiếp được. Colab có thể xóa phiên và dữ liệu khi ngắt kết nối; tải bản đang làm về máy sau các mốc khóa nhưng chỉ push khi đã hoàn tất bài.
+Push các đường dẫn này lên repo public cá nhân:
 
-## Lịch 240 phút
+1. `labels/round1/`: 8–16 ảnh pool có nhãn đã sửa và `batch.json` (mặc định 12 ảnh).
+2. `outputs/metrics_round0.json`, `outputs/metrics_round1.json`, `outputs/selection_round1.csv`, `outputs/selection_round1.jpg`, `outputs/compare_round0.jpg`, `outputs/compare_round1.jpg`, `outputs/round1_diff.json` và `outputs/round1_diff.md`.
+3. `reports/BLIND_SCAN.md`, `reports/blind_lock.json`, `reports/REVIEW_LOG.csv`, `reports/SELECTION.md`, `reports/rounds_table.md`, `reports/REPORT.md`.
 
-| Phút | Việc | Kết quả |
-|---:|---|---|
-| 0–15 | Tự xác định lộ trình, chạy AI trên frame demo, xem 4 trạng thái | `init` xong, có `ai_probe.json`, mở được khối tay trên CVAT |
-| 15–45 | Khối 1: làm tay 6 frame | Job làm tay đã lưu |
-| 45–95 | Khối 2: thẩm định pre-label 10 frame | Job có AI đã lưu, `decision_log.csv` ≥ 5 dòng |
-| 95–105 | Nghỉ | |
-| 105–115 | Export, dự đoán 3 số, `make lock` | Mã khóa gửi Lab Coach |
-| 115–135 | Cài gói 1, `make profile`, đọc lỗi | `interpretation.md` |
-| 135–155 | Sửa lại lỗi và đối chiếu một ca khó | `rework_log.csv`, `assisted_rework.xml`, `case_review.md` |
-| 155–165 | Nghỉ | |
-| 165–195 | Xem gợi ý model, phản biện và xếp hạng 50 frame pool | `frame_scores.csv`, `ranking.csv`, `ranking_rationale.md` |
-| 195–205 | Tự kiểm hoặc cùng bạn kiểm, `make lock-ranking`, cài gói 2, `make al-eval` | `peer_check.md` |
-| 205–220 | Đề xuất lượt sau, debrief cả lớp | `next_round.md` |
-| 220–230 | Phản tư, `make check-submission`, nộp | `reflection.md` |
-| 230–240 | Dự phòng hoặc stretch | |
-
-Checkpoint: phút 30 xong ≥ 3 frame tay · phút 70 xong 6 frame đầu của job có AI · phút 180 mọi frame pool có điểm.
-Chậm hơn thì báo Lab Coach; đừng bỏ qua xe để kịp giờ.
-
-## Gói nộp
-
-Mọi file nằm trong `submission/`. Mục 1–4 là tối thiểu cho mọi người. Mục 5–8 thuộc bài chính; hết giờ mà còn thiếu thì
-báo Lab Coach.
-
-| # | File | Tạo lúc |
-|---|---|---|
-| 1 | `manual_X.xml` (nhóm A) hoặc `manual_Y.xml` (nhóm B) | Export job làm tay |
-| 2 | `assisted.xml` | Export job có AI |
-| 3 | `decision_log.csv` (≥ 5 dòng của bạn) | Trong khối 2 |
-| 4 | `states.json`, `prediction.md`, `lock.txt` | `make states`, bạn điền, `make lock` |
-| 5 | `error_profile.csv`, `interpretation.md` | `make profile`, bạn viết |
-| 6 | `rework_log.csv`, `assisted_rework.xml`, `case_review.md` | `make profile`, bạn đối chiếu và export lại |
-| 7 | `ranking.csv`, `ranking_rationale.md`, `peer_check.md`, `lock_ranking.txt`, `next_round.md` | Bạn điền, khóa, xem kết quả rồi đề xuất lượt sau |
-| 8 | `reflection.md` (4 câu) | Tạo khi `make profile`, bạn trả lời |
-| Thực hành AI | `ai_probe.json`, `frame_scores.csv`, `al_eval.json` | Notebook chạy YOLO trên `d01`, tạo gợi ý chọn mẫu và phản hồi; bằng chứng hỗ trợ cho mục 7 |
-
-`make check-submission` báo file nào thiếu hoặc sai dạng. Lệnh này không chấm điểm.
-Đọc [rubric 100 điểm](RUBRIC.md) để biết hệ thống sẽ chấm bằng chứng và lập luận nào sau khi bạn nộp bài. Độ lớn của các chỉ số bias không phải điểm bài làm; rubric không đặt ngưỡng đạt/trượt chính thức.
-
-## Card tra cứu
-
-| Card | Mở khi |
-|---|---|
-| [Guideline](cards/guideline-card.md) | Trước khối 1; tra suốt buổi |
-| [4 trạng thái](cards/four-states-card.md) | Phút 0–15, frame demo |
-| [CVAT](cards/cvat-card.md) | CVAT local hoặc CVAT chương trình, phím tắt, tag `not_reviewed`, export |
-| [Từ vựng](cards/vocabulary-card.md) | Gặp từ lạ |
-| [Sau khi khóa](cards/after-lock-card.md) | **Chỉ sau `make lock`** |
-| [Pool](cards/pool-card.md) và [chi phí](cards/cost-card.md) | Phút 165, phần xếp hạng |
-| [Stretch](cards/stretch-card.md) | Xong bài chính sớm |
-
-## Luật chung
-
-- **Khóa trước, xem đáp án sau.** Reference chỉ phát sau khi bạn gửi mã khóa. Sau `make lock`, các file đã khóa không sửa
-  nữa; mọi lệnh sau kiểm lại mã và báo lỗi nếu file đổi.
-- **Repo bài làm là public.** Chỉ push bài sau cả hai mốc khóa; không xem bài của người khác trước khi tự khóa. Không
-  push `reference/`, các gói đáp án, token/mật khẩu hoặc dữ liệu cá nhân ngoài phần bài yêu cầu. `.gitignore` đã chặn
-  `reference/`; chia sẻ đáp án cho bạn cùng lớp chưa khóa làm hỏng phép đo của họ.
-- **Không sửa `data/`.** `make verify-data` kiểm từng file theo `data/SHA256SUMS`.
-- **Ca card không nói tới:** ghi `escalated` vào `decision_log.csv` và hỏi Lab Coach. Không tự đặt luật.
-- **Debrief không gắn tên.** Không hỏi bạn khác ra số nào.
-
-## Trong repo
-
-| Đường dẫn | Nội dung |
-|---|---|
-| `data/frames/lab/` | Frame demo `d01`, tập X, Y, C (17 frame) |
-| `data/frames/pool/` | 50 frame chưa gán nhãn `p001`–`p050` |
-| `data/prelabel/`, `data/cvat/` | Pre-label đã đóng băng (JSON và CVAT XML cho từng nhóm) |
-| `data/pool/` | Thông tin frame pool, dự đoán của model, contact sheet, ngân sách |
-| `data/manifest.csv` | Danh mục frame: tập, điều kiện, kích thước, sha256 |
-| `lab8/` | Công cụ dòng lệnh (`make <lệnh>`) |
-| `notebooks/day8-colab.ipynb` | Chạy AI demo, lệnh phân tích và đóng gói bài nộp trên Colab |
-| `templates/` | Mẫu `make init` và `make profile` chép vào `submission/` |
-| `reference/` | Rỗng lúc phát; `make install-reference` giải nén gói Lab Coach phát vào đây |
-
-Repo này là bản phát hành từ `learner/` của pilot Day 8. Ảnh `cards/img/d01_reference.jpg` chỉ là lời giải của **frame demo d01** trong card bốn trạng thái; đáp án các frame bài tập và key honeypot không nằm trong repo học viên. Lab Coach phát hai gói reference theo các mốc khóa bài trong [GUIDE.md](GUIDE.md).
-
-Nguồn ảnh, model và giấy phép: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+`python3 tools/check_submission.py` kiểm **hình thức và tính nhất quán cơ bản**, không tự chấm điểm. Hệ thống chấm bài của chương trình sẽ đánh giá sau khi nhận repo. File `to_label/` và các ZIP trung gian không cần push; giữ chúng trên máy để khôi phục khi cần.

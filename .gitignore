@@ -1,7 +1,11 @@
-# Gói reference do Lab Coach phát sau khi bạn khóa bài. Không push: bạn cùng lớp chưa khóa có thể thấy đáp án.
-reference/*
-!reference/.gitkeep
-
 __pycache__/
 *.pyc
 .DS_Store
+.venv/
+runs/
+*.pt
+*.onnx
+day8_data.zip
+day8_round*_out.zip
+to_label/
+.agent/
