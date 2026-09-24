@@ -12,7 +12,7 @@ Một vòng bắt buộc: **cold start → chọn 12 ảnh → kiểm/sửa pre-
 | --- | --- |
 | **Colab** | Chạy YOLO, chọn ảnh, fine-tune và tạo số đo. Máy cá nhân không cần GPU. |
 | **CVAT** | Máy thường dùng CVAT local; máy yếu dùng CVAT chương trình qua trình duyệt. Cả hai sửa cùng định dạng box `car` và xuất Ultralytics YOLO Detection 1.0. AnyLabeling hoặc sửa file YOLO là đường khác nếu cần. |
-| **Máy cá nhân** | Chạy các script Python chỉ dùng thư viện chuẩn để kiểm và đóng gói nhãn; tải kết quả Colab về, commit rồi push repo public của mình. Không huấn luyện mô hình ở đây. |
+| **Máy cá nhân** | Chạy các script Python chỉ dùng thư viện chuẩn để khóa quan sát, kiểm và đóng gói nhãn; tải kết quả phân tích từ Colab về, commit rồi push repo public của mình. Không huấn luyện mô hình ở đây. |
 
 Mọi người dùng cùng [quy tắc gán nhãn](GUIDELINE_LABEL.md), [hướng dẫn từng bước](GUIDE.md), [rubric 100 điểm](RUBRIC.md) và gói nộp. Làm cùng bạn được trao đổi sau khi mỗi người đã khóa bản quan sát độc lập; mỗi người vẫn tự sửa nhãn, phân tích và nộp repo riêng.
 

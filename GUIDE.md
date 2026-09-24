@@ -49,7 +49,7 @@ Trên Colab, chạy notebook lần thứ hai và tải **`day8_data.zip` mới**
 
 1. Chép `reports/SELECTION_TEMPLATE.md` thành `reports/SELECTION.md`. Xét 50 ứng viên đứng đầu trong `outputs/selection_round1.csv`, đề xuất top 5 nếu chỉ đủ công rà năm ảnh. Dùng CSV và contact sheet để giải thích ba frame model chọn và một frame khác; nêu tác động của điểm bất định, ảnh gần trùng và chi phí rà nhãn.
 2. Chép `reports/REPORT_TEMPLATE.md` thành `reports/REPORT.md`; điền đủ năm mục. Phân biệt chất lượng **nhãn AI ban đầu**, **nhãn bạn đã sửa** và **model sau fine-tune**. Nhãn test do model khác tạo chưa được người rà; đừng gọi đó là chân lý tuyệt đối.
-3. Chạy `python3 tools/summarize_rounds.py`, rồi `python3 tools/check_submission.py`. Lệnh sau chỉ kiểm gói nộp trên máy, không chấm điểm. Sửa mọi lỗi định dạng được báo.
+3. Notebook Colab đã tạo `reports/rounds_table.md` trong ZIP kết quả. Sau khi giải nén, chạy `python3 tools/check_submission.py` trên máy cá nhân; lệnh này chỉ kiểm gói nộp, không chấm điểm. Sửa mọi lỗi định dạng được báo.
 4. Dùng GitHub Desktop **Commit to main → Push origin** hoặc Git CLI. Kiểm tra trên trình duyệt rằng repo bài làm đang **public** và các đường dẫn trong [gói nộp](README.md#gói-nộp-duy-nhất) xuất hiện. Tải kết quả từ Colab về máy trước khi phiên ngắt; Colab không phải chỗ lưu bài cuối cùng.
 
 ## Khi gặp sự cố
